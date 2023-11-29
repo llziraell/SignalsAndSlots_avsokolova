@@ -10,6 +10,7 @@
 #include "player.h"
 #include "ui_widget.h"
 #include "healthbar.h"
+#include "doctor.h"
 
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   ui->setupUi(this);
@@ -17,6 +18,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   Player *player = new Player(100);
   Enemy *enemy = new Enemy(10);
   HealthBar *healthBar = new HealthBar;
+  Doctor *doctor = new Doctor(10);
 
   int minValue = 0;
   healthBar->setRange(minValue, player->GetMaxHealth());
@@ -29,12 +31,16 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   QPointer<QPushButton> damageButton = new QPushButton;
   damageButton->setText("Нанести урон");
 
+  QPointer<QPushButton> recoveryButton = new QPushButton;
+  recoveryButton->setText("Восстановить урон");
+
   QWidget *widget = new QWidget;
   QGridLayout *widgetLayout = new QGridLayout;
 
   widgetLayout->addWidget(healthBarCaption, 0, 0);
   widgetLayout->addWidget(healthBar, 0, 1);
   widgetLayout->addWidget(damageButton, 1, 0, 1, 2);
+   widgetLayout->addWidget(recoveryButton, 2, 0, 1, 2);
 
   widget->setLayout(widgetLayout);
 
@@ -52,11 +58,14 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   mainLayout->addWidget(widget);
   mainLayout->addItem(bottomSpacer);
 
+  connect(recoveryButton, &QPushButton::clicked, doctor, &Doctor::OnRecoveryButtonClicked);
+  connect(doctor, &Doctor::MakeRecovery, player, &Player::GetRecovery); // Предположим, что есть метод Heal(int amount) в классе Player
   connect(damageButton, &QPushButton::clicked, enemy,
           &Enemy::OnDamageButtonClicked);
   connect(enemy, &Enemy::MakeDamage, player, &Player::TakeDamage);
   connect(player, &Player::HealthChanged, healthBar, &HealthBar::setValue);
   connect(player, &Player::HealthChanged, healthBar, &HealthBar::changeColor);
+
 }
 
 Widget::~Widget() { delete ui; }

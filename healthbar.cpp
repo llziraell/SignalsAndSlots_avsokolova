@@ -9,7 +9,13 @@ HealthBar::HealthBar(QWidget *parent)
 void HealthBar::changeColor(int value) {
     if (value < maximum() / 2) {
         setStyleSheet(kDangerStyle);
-    } else {
+    } else if (value == maximum()) {
         setStyleSheet(kNormalStyle);
+    } else {
+         setStyleSheet(kRecoveryStyle);
     }
+}
+
+void HealthBar::setMaxValue(int newMaxValue) {
+    maxValue = newMaxValue;
 }
