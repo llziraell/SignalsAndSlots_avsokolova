@@ -9,14 +9,15 @@
 #include "enemy.h"
 #include "player.h"
 #include "ui_widget.h"
+#include "healthbar.h"
 
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   ui->setupUi(this);
 
   Player *player = new Player(100);
   Enemy *enemy = new Enemy(10);
+  HealthBar *healthBar = new HealthBar;
 
-  QProgressBar *healthBar = new QProgressBar;
   int minValue = 0;
   healthBar->setRange(minValue, player->GetMaxHealth());
   healthBar->setValue(player->GetMaxHealth());
@@ -54,7 +55,8 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
   connect(damageButton, &QPushButton::clicked, enemy,
           &Enemy::OnDamageButtonClicked);
   connect(enemy, &Enemy::MakeDamage, player, &Player::TakeDamage);
-  connect(player, &Player::HealthChanged, healthBar, &QProgressBar::setValue);
+  connect(player, &Player::HealthChanged, healthBar, &HealthBar::setValue);
+  connect(player, &Player::HealthChanged, healthBar, &HealthBar::changeColor);
 }
 
 Widget::~Widget() { delete ui; }

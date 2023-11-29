@@ -10,12 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     enemy.cpp \
+    healthbar.cpp \
     main.cpp \
     player.cpp \
     widget.cpp
 
 HEADERS += \
     enemy.h \
+    healthbar.h \
     player.h \
     widget.h
 
